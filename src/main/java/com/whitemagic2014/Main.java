@@ -13,34 +13,33 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
+        // 读取配置文件
         Properties properties = new Properties();
         properties.load(Main.class.getClassLoader().getResourceAsStream("application.properties"));
-        String enviroment = (String) properties.get("enviroment");
-
         // 实例化解析器
         Parser parser = new Parser();
+        // 判断运行环境
+        String enviroment = (String) properties.get("enviroment");
         // 设置gpt调用器
         if ("local".equals(enviroment)) {
             System.out.println("MagicServer model");
             parser.registGptSender(new MagicServer());
         } else {
             System.out.println("MagicSdk model");
-            parser.registGptSender(new MagicSdk());
+            String key = (String) properties.get("key");
+            parser.registGptSender(new MagicSdk(key));
         }
-
-        // 注册指令
+        // 注册指令 如果在框架中，可以优化为注解扫描注册
         parser.registCommand(new MailV1());
         parser.registCommand(new MailV2());
         parser.registCommand(new MailV3());
         parser.registCommand(new RemindV1());
         parser.registCommand(new RemindV2());
         parser.registCommand(new RemindV3());
-
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // 命令行交互
         System.out.println("启动成功:\nmodel1 - 传统指令\nmodel2 - 自然语言参数指令\nmodel3 - 自然语言指令\nexit   - 退出");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            System.out.println();
             String inLine = br.readLine();
             if ("model1".equals(inLine)) {
                 parser.modelV1();
@@ -53,6 +52,7 @@ public class Main {
             } else {
                 System.out.println(parser.parse(inLine));
             }
+            System.out.println();
         }
     }
 

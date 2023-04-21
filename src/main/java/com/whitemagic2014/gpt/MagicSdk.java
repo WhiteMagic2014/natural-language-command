@@ -1,25 +1,16 @@
 package com.whitemagic2014.gpt;
 
 import com.github.WhiteMagic2014.gptApi.Chat.CreateChatCompletionRequest;
-import com.whitemagic2014.Main;
 import com.whitemagic2014.beans.GptTemplate;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 public class MagicSdk implements Gpt {
 
     private String key;
 
-    public MagicSdk() {
-        try {
-            Properties properties = new Properties();
-            properties.load(Main.class.getClassLoader().getResourceAsStream("application.properties"));
-            this.key = (String) properties.get("key");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public MagicSdk(String key) {
+        this.key = key;
     }
 
     @Override
