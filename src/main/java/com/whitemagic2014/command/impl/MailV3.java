@@ -1,6 +1,6 @@
 package com.whitemagic2014.command.impl;
 
-import com.whitemagic2014.beans.AiTemplate;
+import com.whitemagic2014.beans.GptTemplate;
 import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV3;
@@ -40,12 +40,12 @@ public class MailV3 implements CommandV3 {
     }
 
     @Override
-    public List<AiTemplate> aiTemplate() {
-        List<AiTemplate> voList = new ArrayList<>();
-        voList.add(new AiTemplate("system", "请将给出的内容归纳为以下格式: 收件人:xxx 内容:xxxx"));
-        voList.add(new AiTemplate("user", "帮我给ammy写一封邮件，告诉她3天后我会去接她"));
-        voList.add(new AiTemplate("assistant", "收件人:ammy 内容:亲爱的ammy,3天后我会在机场为你接机，期待与你的相见。"));
-        voList.add(new AiTemplate("user", "当前时间为" + DateFormatUtil.sdfv4.format(new Date()) + ";" + Command.paramsPlaceholder));
+    public List<GptTemplate> gptTemplate() {
+        List<GptTemplate> voList = new ArrayList<>();
+        voList.add(new GptTemplate("system", "请将给出的内容归纳为以下格式: 收件人:xxx 内容:xxxx"));
+        voList.add(new GptTemplate("user", "帮我给ammy写一封邮件，告诉她3天后我会去接她"));
+        voList.add(new GptTemplate("assistant", "收件人:ammy 内容:亲爱的ammy,3天后我会在机场为你接机，期待与你的相见。"));
+        voList.add(new GptTemplate("user", "当前时间为" + DateFormatUtil.sdfv4.format(new Date()) + ";" + Command.paramsPlaceholder));
         return voList;
     }
 }

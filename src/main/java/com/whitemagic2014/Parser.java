@@ -1,13 +1,14 @@
 package com.whitemagic2014;
 
-import com.github.WhiteMagic2014.gptApi.Chat.CreateChatCompletionRequest;
-import com.whitemagic2014.beans.AiTemplate;
+import com.whitemagic2014.beans.GptTemplate;
 import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV1;
 import com.whitemagic2014.command.CommandV2;
 import com.whitemagic2014.command.CommandV3;
+import com.whitemagic2014.gpt.Gpt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,17 @@ import java.util.Map;
 public class Parser {
 
 
-    private String key = "";
+    /**
+     * gpt 调用器
+     */
+    private Gpt gpt;
 
-    public Parser key(String key) {
-        this.key = key;
-        return this;
+    /**
+     * 注册 gpt 调用器
+     * @param gpt
+     */
+    public void registGptSender(Gpt gpt) {
+        this.gpt = gpt;
     }
 
     /**
@@ -43,13 +50,13 @@ public class Parser {
      * @param commands
      * @return
      */
-    public void registerCommands(List<Command> commands) {
+    public void registCommands(List<Command> commands) {
         for (Command command : commands) {
-            registerCommand(command);
+            registCommand(command);
         }
     }
 
-    public void registerCommand(Command command) {
+    public void registCommand(Command command) {
         // 分配指令监听组
         if (command instanceof CommandV1) {
             commandsV1.put(((CommandV1) command).head(), (CommandV1) command);
@@ -78,8 +85,8 @@ public class Parser {
      * @return
      */
     public Parser modelV2() {
-        if ("".equals(key)) {
-            System.out.println("未设置key");
+        if (gpt == null) {
+            System.out.println("未设置gpt调用器");
         } else {
             this.model = 2;
             System.out.println("解析模式 自然语言参数指令");
@@ -93,8 +100,8 @@ public class Parser {
      * @return
      */
     public Parser modelV3() {
-        if ("".equals(key)) {
-            System.out.println("未设置key");
+        if (gpt == null) {
+            System.out.println("未设置gpt调用器");
         } else {
             this.model = 3;
             System.out.println("解析模式 自然语言指令");
@@ -146,11 +153,11 @@ public class Parser {
         String params = args.replaceFirst(command.head() + " ", "");
 
         // 参数解析
-        String analysedParams = paramAnalyze(command.aiTemplate(), params);
+        String analysedParams = paramAnalyze(command.gptTemplate(), params);
         if (command.checkParams(analysedParams)) {
             return command.handle(analysedParams);
         }
-        return Result.error("错误的参数: " + analysedParams + "\n请优化ai解析模版");
+        return Result.error("错误的参数: " + analysedParams + "\n请优化gpt解析模版");
     }
 
     private Result<String> parseV3(String args) {
@@ -162,11 +169,11 @@ public class Parser {
         // 获得指令
         CommandV3 command = commandsV3.get(intention);
         // 参数解析
-        String analysedParams = paramAnalyze(command.aiTemplate(), args);
+        String analysedParams = paramAnalyze(command.gptTemplate(), args);
         if (command.checkParams(analysedParams)) {
             return command.handle(analysedParams);
         }
-        return Result.error("错误的参数: " + analysedParams + "\n请优化ai解析模版");
+        return Result.error("错误的参数: " + analysedParams + "\n请优化gpt解析模版");
     }
 
 
@@ -177,20 +184,12 @@ public class Parser {
      * @param param
      * @return
      */
-    private String paramAnalyze(List<AiTemplate> templates, String param) {
-        CreateChatCompletionRequest request = new CreateChatCompletionRequest()
-                .key(key)
-                .maxTokens(500);
-        for (AiTemplate tmp : templates) {
-            request.addMessage(tmp.getRole(), tmp.getPrompt().replace(Command.paramsPlaceholder, param));
+    private String paramAnalyze(List<GptTemplate> templates, String param) {
+        // 占位符替换参数
+        for (GptTemplate template : templates) {
+            template.setPrompt(template.getPrompt().replace(Command.paramsPlaceholder, param));
         }
-        String result = "";
-        try {
-            result = request.sendForChoices().get(0).getMessage().getContent();
-        } catch (Exception e) {
-            return "很抱歉，出错了";
-        }
-        return result.trim();
+        return gpt.chat(templates);
     }
 
     /**
@@ -200,26 +199,18 @@ public class Parser {
      * @return
      */
     private String paramIntention(String param) {
-        CreateChatCompletionRequest request = new CreateChatCompletionRequest()
-                .key(key)
-                .maxTokens(500);
+        List<GptTemplate> templates = new ArrayList<>();
         String intentions = "[" + String.join(",", v3Intentions.keySet()) + "]";
-        request.addMessage("system", "请将给出的内容按照以下类别分类" + intentions);
+        templates.add(new GptTemplate("system", "请将给出的内容按照以下类别分类" + intentions+" 请仅给出类别，不要附加任何他字符"));
         for (String key : v3Intentions.keySet()) {
             List<String> demos = v3Intentions.get(key);
             for (String demo : demos) {
-                request.addMessage("user", demo);
-                request.addMessage("assistant", key);
+                templates.add(new GptTemplate("user", demo));
+                templates.add(new GptTemplate("assistant", key));
             }
         }
-        request.addMessage("user", param);
-        String result = "";
-        try {
-            result = request.sendForChoices().get(0).getMessage().getContent();
-        } catch (Exception e) {
-            return "很抱歉，出错了";
-        }
-        return result;
+        templates.add(new GptTemplate("user", param));
+        return gpt.chat(templates);
     }
 
 }

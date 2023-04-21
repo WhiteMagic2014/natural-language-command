@@ -1,6 +1,6 @@
 package com.whitemagic2014.command;
 
-import com.whitemagic2014.beans.AiTemplate;
+import com.whitemagic2014.beans.GptTemplate;
 
 import java.util.List;
 
@@ -20,10 +20,10 @@ public interface CommandV2 extends Command {
 
 
     /**
-     * 定义 ai解析模版
+     * 定义 gpt解析模版
      *
      * @return
      */
-    List<AiTemplate> aiTemplate();
+    List<GptTemplate> gptTemplate();
 
 }

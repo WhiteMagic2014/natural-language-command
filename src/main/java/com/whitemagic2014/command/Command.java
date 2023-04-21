@@ -10,7 +10,7 @@ import com.whitemagic2014.beans.Result;
 public interface Command {
 
     /**
-     * aiTemplate中可能会用到的参数占位符
+     * gptTemplate中可能会用到的参数占位符
      */
     public static final String paramsPlaceholder = "${paramsPlaceholder}";
 
