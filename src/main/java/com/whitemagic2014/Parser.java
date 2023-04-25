@@ -28,6 +28,7 @@ public class Parser {
 
     /**
      * 注册 gpt 调用器
+     *
      * @param gpt
      */
     public void registGptSender(Gpt gpt) {
@@ -161,10 +162,18 @@ public class Parser {
     }
 
     private Result<String> parseV3(String args) {
-        // 意向解析
+        // 指令，交谈，提问
+        if (!isCommand(args)) {
+            // 并非指令 对话
+            String resp = gpt.chat("nlc-magic", args);
+            return Result.success(resp);
+        }
+        // 指令意向解析
         String intention = paramIntention(args);
         if (!commandsV3.containsKey(intention)) {
             return Result.error("未找到匹配的v3指令,解析意向: " + intention + "\n请检查该意向是否注册");
+        } else {
+            System.out.println("匹配指令意向: " + intention);
         }
         // 获得指令
         CommandV3 command = commandsV3.get(intention);
@@ -174,6 +183,29 @@ public class Parser {
             return command.handle(analysedParams);
         }
         return Result.error("错误的参数: " + analysedParams + "\n请优化gpt解析模版");
+    }
+
+
+    /**
+     * 指令，交谈，提问  区分
+     *
+     * @param args
+     */
+    private boolean isCommand(String args) {
+        List<GptTemplate> templates = new ArrayList<>();
+        templates.add(new GptTemplate("system", "判断区分内容的意向类别[交谈，提问，指令]，请仅给出类别，不要附加任何他字符"));
+        templates.add(new GptTemplate("user", "3天后早上8点提醒我去超市买东西"));
+        templates.add(new GptTemplate("assistant", "指令"));
+        templates.add(new GptTemplate("user", "帮我给ammy写一封邮件，告诉她3天后我会去接她"));
+        templates.add(new GptTemplate("assistant", "指令"));
+        templates.add(new GptTemplate("user", "真是个好天气呢"));
+        templates.add(new GptTemplate("assistant", "交谈"));
+        templates.add(new GptTemplate("user", "mysql中主键和外键有什么区别"));
+        templates.add(new GptTemplate("assistant", "提问"));
+        templates.add(new GptTemplate("user", args));
+        String tmp = gpt.originChat(templates);
+        System.out.println("prompt 分类: " + tmp);
+        return tmp.trim().startsWith("指令");
     }
 
 
@@ -189,7 +221,7 @@ public class Parser {
         for (GptTemplate template : templates) {
             template.setPrompt(template.getPrompt().replace(Command.paramsPlaceholder, param));
         }
-        return gpt.chat(templates);
+        return gpt.originChat(templates);
     }
 
     /**
@@ -201,7 +233,7 @@ public class Parser {
     private String paramIntention(String param) {
         List<GptTemplate> templates = new ArrayList<>();
         String intentions = "[" + String.join(",", v3Intentions.keySet()) + "]";
-        templates.add(new GptTemplate("system", "请将给出的内容按照以下类别分类" + intentions+" 请仅给出类别，不要附加任何他字符"));
+        templates.add(new GptTemplate("system", "请将给出的内容按照以下类别分类" + intentions + " 请仅给出类别，不要附加任何他字符"));
         for (String key : v3Intentions.keySet()) {
             List<String> demos = v3Intentions.get(key);
             for (String demo : demos) {
@@ -210,7 +242,7 @@ public class Parser {
             }
         }
         templates.add(new GptTemplate("user", param));
-        return gpt.chat(templates);
+        return gpt.originChat(templates);
     }
 
 }

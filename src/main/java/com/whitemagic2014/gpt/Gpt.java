@@ -9,6 +9,51 @@ import java.util.List;
  */
 public interface Gpt {
 
-    String chat(List<GptTemplate> templates);
+    /**
+     * origin open ai chat api
+     *
+     * @param templates
+     * @return
+     */
+    String originChat(List<GptTemplate> templates);
+
+
+    /**
+     * really chat
+     *
+     * @param session
+     * @param prompt
+     * @return
+     */
+    String chat(String session, String prompt);
+
+
+    /**
+     * 性格设定
+     *
+     * @param session 对话session
+     * @param setting 性格设定
+     * @return
+     */
+    String setPersonality(String session, String setting);
+
+
+    /**
+     * 清除 session 上下文
+     *
+     * @param session
+     * @return
+     */
+    String clearLog(String session);
+
+
+    /**
+     * 作n副图
+     *
+     * @param prompt
+     * @param n
+     * @return
+     */
+    List<String> image(String prompt, int n);
 
 }
