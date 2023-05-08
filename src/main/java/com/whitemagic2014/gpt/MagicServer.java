@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.whitemagic2014.beans.GptTemplate;
 import com.whitemagic2014.utils.HttpUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MagicServer implements Gpt {
@@ -16,6 +17,7 @@ public class MagicServer implements Gpt {
     static String setPersonality = "";
     static String image = "";
     static String oriChat = "";
+    static String embedding = "";
 
 
     @Override
@@ -65,5 +67,23 @@ public class MagicServer implements Gpt {
         String result = HttpUtil.post(image, param);
         JSONObject jsonObject = JSONObject.parseObject(result);
         return JSONObject.parseArray(jsonObject.getJSONArray("data").toJSONString(), String.class);
+    }
+
+
+    @Override
+    public List<List<Double>> input2Vector(List<String> inputs) {
+        JSONArray array = JSONArray.parseArray(JSON.toJSONString(inputs));
+        String tempResult = HttpUtil.post(embedding, array);
+        JSONObject jsonObject = JSONObject.parseObject(tempResult);
+
+        JSONArray data = jsonObject.getJSONArray("data");
+        List<List<Double>> resultList = new ArrayList<>();
+        for (Object object : data) {
+            JSONArray innerArray = (JSONArray) object;
+            List<Double> innerList = innerArray.toJavaList(Double.class);
+            resultList.add(innerList);
+        }
+        return resultList;
+
     }
 }

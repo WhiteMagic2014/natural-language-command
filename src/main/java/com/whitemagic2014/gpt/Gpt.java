@@ -56,4 +56,13 @@ public interface Gpt {
      */
     List<String> image(String prompt, int n);
 
+
+    /**
+     * 输入转向量
+     *
+     * @param inputs
+     * @return
+     */
+    List<List<Double>> input2Vector(List<String> inputs);
+
 }

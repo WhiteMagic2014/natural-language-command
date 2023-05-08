@@ -3,6 +3,7 @@ package com.whitemagic2014.gpt;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.WhiteMagic2014.gptApi.Chat.CreateChatCompletionRequest;
+import com.github.WhiteMagic2014.gptApi.Embeddings.CreateEmbeddingsRequest;
 import com.github.WhiteMagic2014.gptApi.Images.CreateImageRequest;
 import com.whitemagic2014.beans.ChatLog;
 import com.whitemagic2014.beans.GptTemplate;
@@ -129,5 +130,19 @@ public class MagicSdk implements Gpt {
         return resultList;
     }
 
+
+    @Override
+    public List<List<Double>> input2Vector(List<String> inputs) {
+        CreateEmbeddingsRequest request = new CreateEmbeddingsRequest()
+                .key(key);
+        if (inputs.size() == 1) {
+            request.input(inputs.get(0));
+        } else {
+            String[] ins = new String[inputs.size()];
+            inputs.toArray(ins);
+            request.inputs(ins);
+        }
+        return request.sendForEmbeddings();
+    }
 
 }

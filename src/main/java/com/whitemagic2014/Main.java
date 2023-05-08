@@ -40,7 +40,13 @@ public class Main {
         parser.registCommand(new RemindV2());
         parser.registCommand(new RemindV3());
         // 命令行交互
-        System.out.println("启动成功:\nmodel1 - 传统指令\nmodel2 - 自然语言参数指令\nmodel3 - 自然语言指令\nmodel3set - 自然语言指令模式下设置对话性格\nmodel3clear - 自然语言指令模式下清除上下文\nexit   - 退出");
+        System.out.println("启动成功:\n" +
+                "model1         - 传统指令\n" +
+                "model2         - 自然语言参数指令\n" +
+                "model3         - 自然语言指令\n" +
+                "model3set      - 自然语言指令模式下设置对话性格\n" +
+                "model3clear    - 自然语言指令模式下清除上下文\n" +
+                "exit           - 退出");
         System.out.println();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
