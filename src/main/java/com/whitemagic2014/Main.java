@@ -3,7 +3,7 @@ package com.whitemagic2014;
 import com.whitemagic2014.command.impl.*;
 import com.whitemagic2014.gpt.Gpt;
 import com.whitemagic2014.gpt.MagicSdk;
-import com.whitemagic2014.gpt.MagicServer;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,17 +19,15 @@ public class Main {
         properties.load(Main.class.getClassLoader().getResourceAsStream("application.properties"));
         // 实例化解析器
         Parser parser = new Parser();
-        // 判断运行环境
-        String enviroment = (String) properties.get("enviroment");
+        // 读取配置
+        String proxyServer = (String) properties.get("proxyServer");
+        String key = (String) properties.get("key");
         // 设置gpt调用器
         Gpt gptSender;
-        if ("local".equals(enviroment)) {
-            System.out.println("MagicServer model");
-            gptSender = new MagicServer();
-        } else {
-            System.out.println("MagicSdk model");
-            String key = (String) properties.get("key");
+        if (StringUtils.isBlank(proxyServer)) {
             gptSender = new MagicSdk(key);
+        } else {
+            gptSender = new MagicSdk(proxyServer, key);
         }
         parser.registGptSender(gptSender);
         // 注册指令 如果在框架中，可以优化为注解扫描注册
@@ -48,6 +46,7 @@ public class Main {
                 "model3clear    - 自然语言指令模式下清除上下文\n" +
                 "exit           - 退出");
         System.out.println();
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             String inLine = br.readLine();
@@ -68,6 +67,7 @@ public class Main {
             }
             System.out.println();
         }
+
     }
 
 

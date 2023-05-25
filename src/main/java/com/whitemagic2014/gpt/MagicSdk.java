@@ -1,10 +1,13 @@
 package com.whitemagic2014.gpt;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.WhiteMagic2014.gptApi.Chat.CreateChatCompletionRequest;
 import com.github.WhiteMagic2014.gptApi.Embeddings.CreateEmbeddingsRequest;
 import com.github.WhiteMagic2014.gptApi.Images.CreateImageRequest;
+import com.github.WhiteMagic2014.util.DefaultGptHttpUtil;
+import com.github.WhiteMagic2014.util.GptHttpUtil;
 import com.whitemagic2014.beans.ChatLog;
 import com.whitemagic2014.beans.GptTemplate;
 
@@ -18,15 +21,26 @@ public class MagicSdk implements Gpt {
 
     private int maxLog = 5; // 最大记忆层数
 
+    private String server;
+
     private String key;
 
     public MagicSdk(String key) {
         this.key = key;
     }
 
+    public MagicSdk(String server, String key) {
+        this.server = server;
+        this.key = key;
+    }
+
     @Override
     public String originChat(List<GptTemplate> templates) {
+        GptHttpUtil gptHttpUtil = new DefaultGptHttpUtil();
+
+        System.out.println(JSON.toJSONString(templates));
         CreateChatCompletionRequest request = new CreateChatCompletionRequest()
+                .server(server)
                 .key(key)
                 .maxTokens(500);
         for (GptTemplate tmp : templates) {
@@ -47,6 +61,7 @@ public class MagicSdk implements Gpt {
         String personal = personality.getOrDefault(session, "与用户进行闲聊或娱乐性的对话，以改善用户体验。");
         // 构造初始请求
         CreateChatCompletionRequest request = new CreateChatCompletionRequest()
+                .server(server)
                 .key(key)
                 .maxTokens(500)
                 .addMessage("system", personal);
@@ -113,6 +128,7 @@ public class MagicSdk implements Gpt {
         JSONObject temp = null;
         try {
             temp = new CreateImageRequest()
+                    .server(server)
                     .key(key)
                     .prompt(prompt)
                     .n(n)
@@ -134,6 +150,7 @@ public class MagicSdk implements Gpt {
     @Override
     public List<List<Double>> input2Vector(List<String> inputs) {
         CreateEmbeddingsRequest request = new CreateEmbeddingsRequest()
+                .server(server)
                 .key(key);
         if (inputs.size() == 1) {
             request.input(inputs.get(0));
