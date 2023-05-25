@@ -1,13 +1,10 @@
 package com.whitemagic2014.gpt;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.WhiteMagic2014.gptApi.Chat.CreateChatCompletionRequest;
 import com.github.WhiteMagic2014.gptApi.Embeddings.CreateEmbeddingsRequest;
 import com.github.WhiteMagic2014.gptApi.Images.CreateImageRequest;
-import com.github.WhiteMagic2014.util.DefaultGptHttpUtil;
-import com.github.WhiteMagic2014.util.GptHttpUtil;
 import com.whitemagic2014.beans.ChatLog;
 import com.whitemagic2014.beans.GptTemplate;
 
