@@ -1,6 +1,6 @@
 package com.whitemagic2014.command;
 
-import com.whitemagic2014.beans.GptTemplate;
+import io.github.WhiteMagic2014.beans.Message;
 
 import java.util.List;
 
@@ -30,6 +30,6 @@ public interface CommandV3 extends Command {
      *
      * @return
      */
-    List<GptTemplate> gptTemplate();
+    List<Message> gptTemplate();
 
 }

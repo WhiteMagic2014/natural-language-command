@@ -1,6 +1,6 @@
 package com.whitemagic2014.gpt;
 
-import com.whitemagic2014.beans.GptTemplate;
+import io.github.WhiteMagic2014.beans.Message;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface Gpt {
      * @param templates
      * @return
      */
-    String originChat(List<GptTemplate> templates);
+    String originChat(List<Message> templates);
 
 
     /**
@@ -45,24 +45,5 @@ public interface Gpt {
      * @return
      */
     String clearLog(String session);
-
-
-    /**
-     * 作n副图
-     *
-     * @param prompt
-     * @param n
-     * @return
-     */
-    List<String> image(String prompt, int n);
-
-
-    /**
-     * 输入转向量
-     *
-     * @param inputs
-     * @return
-     */
-    List<List<Double>> input2Vector(List<String> inputs);
 
 }
