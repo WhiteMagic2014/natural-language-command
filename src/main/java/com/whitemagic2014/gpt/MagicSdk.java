@@ -36,9 +36,6 @@ public class MagicSdk implements Gpt {
 
     @Override
     public String originChat(List<GptTemplate> templates) {
-        GptHttpUtil gptHttpUtil = new DefaultGptHttpUtil();
-
-        System.out.println(JSON.toJSONString(templates));
         CreateChatCompletionRequest request = new CreateChatCompletionRequest()
                 .server(server)
                 .key(key)
