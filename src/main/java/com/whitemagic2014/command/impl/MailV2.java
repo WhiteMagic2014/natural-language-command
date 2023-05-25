@@ -5,7 +5,7 @@ import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV2;
 import com.whitemagic2014.utils.DateFormatUtil;
-import io.github.WhiteMagic2014.beans.Message;
+import io.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,12 +32,12 @@ public class MailV2 implements CommandV2 {
     }
 
     @Override
-    public List<Message> gptTemplate() {
-        List<Message> voList = new ArrayList<>();
-        voList.add(Message.systemMessage("请将给出的内容归纳为以下格式: 收件人:xxx 内容:xxxx"));
-        voList.add(Message.userMessage("帮我给ammy写一封邮件，告诉她3天后我会去接她"));
-        voList.add(Message.assistantMessage("收件人:ammy 内容:亲爱的ammy,3天后我会在机场为你接机，期待与你的相见。"));
-        voList.add(Message.userMessage("当前时间为" + DateFormatUtil.sdfv4.format(new Date()) + ";" + Command.paramsPlaceholder));
+    public List<GptMessage> gptTemplate() {
+        List<GptMessage> voList = new ArrayList<>();
+        voList.add(GptMessage.systemMessage("请将给出的内容归纳为以下格式: 收件人:xxx 内容:xxxx"));
+        voList.add(GptMessage.userMessage("帮我给ammy写一封邮件，告诉她3天后我会去接她"));
+        voList.add(GptMessage.assistantMessage("收件人:ammy 内容:亲爱的ammy,3天后我会在机场为你接机，期待与你的相见。"));
+        voList.add(GptMessage.userMessage("当前时间为" + DateFormatUtil.sdfv4.format(new Date()) + ";" + Command.paramsPlaceholder));
         return voList;
     }
 }

@@ -1,7 +1,7 @@
 package com.whitemagic2014.gpt;
 
 import io.github.WhiteMagic2014.Gmp;
-import io.github.WhiteMagic2014.beans.Message;
+import io.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class MagicSdk implements Gpt {
     }
 
     @Override
-    public String originChat(List<Message> templates) {
+    public String originChat(List<GptMessage> templates) {
         return gmp.originChat(templates);
     }
 
