@@ -6,7 +6,7 @@ import com.whitemagic2014.command.CommandV1;
 import com.whitemagic2014.command.CommandV2;
 import com.whitemagic2014.command.CommandV3;
 import com.whitemagic2014.gpt.Gpt;
-import io.github.WhiteMagic2014.beans.GptMessage;
+import com.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

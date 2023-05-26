@@ -1,7 +1,7 @@
 package com.whitemagic2014.gpt;
 
-import io.github.WhiteMagic2014.Gmp;
-import io.github.WhiteMagic2014.beans.GptMessage;
+import com.github.WhiteMagic2014.Gmp;
+import com.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.List;
 

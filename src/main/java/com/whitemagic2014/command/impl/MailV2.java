@@ -5,7 +5,7 @@ import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV2;
 import com.whitemagic2014.utils.DateFormatUtil;
-import io.github.WhiteMagic2014.beans.GptMessage;
+import com.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
