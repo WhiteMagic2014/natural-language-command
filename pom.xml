@@ -24,7 +24,7 @@
         <dependency>
             <groupId>io.github.whitemagic2014</groupId>
             <artifactId>gpt-magic-plus</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 

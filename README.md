@@ -5,8 +5,8 @@
 
 ![des](img/design.jpg)
 
+![nlc](img/nlc.png)
+
 # 演示截图
 ![test](img/test.png)
 
-# modelV3 演示截图
-![modelV3](img/nlc.png)

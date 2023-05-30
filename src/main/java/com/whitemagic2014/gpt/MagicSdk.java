@@ -37,4 +37,8 @@ public class MagicSdk implements Gpt {
         return gmp.clearLog(session);
     }
 
+    @Override
+    public void addChatLog(String session, String user, String assistant) {
+        gmp.addChatLog(session, user, assistant);
+    }
 }

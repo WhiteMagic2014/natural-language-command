@@ -46,4 +46,14 @@ public interface Gpt {
      */
     String clearLog(String session);
 
+
+    /**
+     * 给 session 添加log
+     *
+     * @param session
+     * @param user
+     * @param assistant
+     */
+    void addChatLog(String session, String user, String assistant);
+
 }

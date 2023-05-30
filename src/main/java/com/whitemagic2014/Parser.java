@@ -1,12 +1,12 @@
 package com.whitemagic2014;
 
+import com.github.WhiteMagic2014.beans.GptMessage;
 import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV1;
 import com.whitemagic2014.command.CommandV2;
 import com.whitemagic2014.command.CommandV3;
 import com.whitemagic2014.gpt.Gpt;
-import com.github.WhiteMagic2014.beans.GptMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,7 +180,11 @@ public class Parser {
         // 参数解析
         String analysedParams = paramAnalyze(command.gptTemplate(), args);
         if (command.checkParams(analysedParams)) {
-            return command.handle(analysedParams);
+            Result<String> result = command.handle(analysedParams);
+            if (result.isSuccess()) {
+                gpt.addChatLog("nlc-magic", args, "好的");
+            }
+            return result;
         }
         return Result.error("错误的参数: " + analysedParams + "\n请优化gpt解析模版");
     }
