@@ -1,6 +1,6 @@
 package com.whitemagic2014;
 
-import com.github.WhiteMagic2014.beans.GptMessage;
+import com.github.WhiteMagic2014.gptApi.Chat.pojo.ChatMessage;
 import com.whitemagic2014.beans.Result;
 import com.whitemagic2014.command.Command;
 import com.whitemagic2014.command.CommandV1;
@@ -196,17 +196,17 @@ public class Parser {
      * @param args
      */
     private boolean isCommand(String args) {
-        List<GptMessage> templates = new ArrayList<>();
-        templates.add(GptMessage.systemMessage("判断区分内容的意向类别[交谈，提问，指令]，请仅给出类别，不要附加任何他字符"));
-        templates.add(GptMessage.userMessage("3天后早上8点提醒我去超市买东西"));
-        templates.add(GptMessage.assistantMessage("指令"));
-        templates.add(GptMessage.userMessage("帮我给ammy写一封邮件，告诉她3天后我会去接她"));
-        templates.add(GptMessage.assistantMessage("指令"));
-        templates.add(GptMessage.userMessage("真是个好天气呢"));
-        templates.add(GptMessage.assistantMessage("交谈"));
-        templates.add(GptMessage.userMessage("mysql中主键和外键有什么区别"));
-        templates.add(GptMessage.assistantMessage("提问"));
-        templates.add(GptMessage.userMessage(args));
+        List<ChatMessage> templates = new ArrayList<>();
+        templates.add(ChatMessage.systemMessage("请将给出的内容按照以下类别分类[交谈，提问，指令]，请仅给出类别，不要附加任何他字符"));
+        templates.add(ChatMessage.userMessage("3天后早上8点提醒我去超市买东西"));
+        templates.add(ChatMessage.assistantMessage("指令"));
+        templates.add(ChatMessage.userMessage("帮我给ammy写一封邮件，告诉她3天后我会去接她"));
+        templates.add(ChatMessage.assistantMessage("指令"));
+        templates.add(ChatMessage.userMessage("真是个好天气呢"));
+        templates.add(ChatMessage.assistantMessage("交谈"));
+        templates.add(ChatMessage.userMessage("mysql中主键和外键有什么区别"));
+        templates.add(ChatMessage.assistantMessage("提问"));
+        templates.add(ChatMessage.userMessage(args));
         String tmp = gpt.originChat(templates);
         System.out.println("prompt 分类: " + tmp);
         return tmp.trim().startsWith("指令");
@@ -220,10 +220,10 @@ public class Parser {
      * @param param
      * @return
      */
-    private String paramAnalyze(List<GptMessage> messages, String param) {
+    private String paramAnalyze(List<ChatMessage> messages, String param) {
         // 占位符替换参数
-        for (GptMessage msg : messages) {
-            msg.setPrompt(msg.getPrompt().replace(Command.paramsPlaceholder, param));
+        for (ChatMessage msg : messages) {
+            msg.setContent(msg.getContent().replace(Command.paramsPlaceholder, param));
         }
         return gpt.originChat(messages);
     }
@@ -235,18 +235,19 @@ public class Parser {
      * @return
      */
     private String paramIntention(String param) {
-        List<GptMessage> messages = new ArrayList<>();
+        List<ChatMessage> messages = new ArrayList<>();
         String intentions = "[" + String.join(",", v3Intentions.keySet()) + "]";
-        messages.add(GptMessage.systemMessage("请将给出的内容按照以下类别分类" + intentions + " 请仅给出类别，不要附加任何他字符"));
+        messages.add(ChatMessage.systemMessage("请将给出的内容按照以下类别分类" + intentions + " 请仅给出类别，不要附加任何他字符"));
         for (String key : v3Intentions.keySet()) {
             List<String> demos = v3Intentions.get(key);
             for (String demo : demos) {
-                messages.add(GptMessage.userMessage(demo));
-                messages.add(GptMessage.assistantMessage(key));
+                messages.add(ChatMessage.userMessage(demo));
+                messages.add(ChatMessage.assistantMessage(key));
             }
         }
-        messages.add(GptMessage.userMessage(param));
-        return gpt.originChat(messages);
+        messages.add(ChatMessage.userMessage(param + " 包含(告诉，通知)等字样并不一定代表是[交谈]"));
+        String resp = gpt.originChat(messages);
+        return resp.split(" ")[0].split("\n")[0];
     }
 
 }

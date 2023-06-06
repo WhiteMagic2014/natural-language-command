@@ -46,7 +46,7 @@ public class Main {
                 "model3clear    - 自然语言指令模式下清除上下文\n" +
                 "exit           - 退出");
         System.out.println();
-
+        parser.modelV3();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             String inLine = br.readLine();

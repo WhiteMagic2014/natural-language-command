@@ -1,6 +1,7 @@
 package com.whitemagic2014.gpt;
 
-import com.github.WhiteMagic2014.beans.GptMessage;
+
+import com.github.WhiteMagic2014.gptApi.Chat.pojo.ChatMessage;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface Gpt {
      * @param templates
      * @return
      */
-    String originChat(List<GptMessage> templates);
+    String originChat(List<ChatMessage> messages);
 
 
     /**
