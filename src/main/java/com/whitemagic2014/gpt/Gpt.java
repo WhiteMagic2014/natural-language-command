@@ -13,7 +13,7 @@ public interface Gpt {
     /**
      * origin open ai chat api
      *
-     * @param templates
+     * @param messages
      * @return
      */
     String originChat(List<ChatMessage> messages);

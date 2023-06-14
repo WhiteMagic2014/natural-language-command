@@ -245,7 +245,7 @@ public class Parser {
                 messages.add(ChatMessage.assistantMessage(key));
             }
         }
-        messages.add(ChatMessage.userMessage(param + " 包含(告诉，通知)等字样并不一定代表是[交谈]"));
+        messages.add(ChatMessage.userMessage(param + " （包含（告诉，通知）等字样并不代表是[交谈]）"));
         String resp = gpt.originChat(messages);
         return resp.split(" ")[0].split("\n")[0];
     }
